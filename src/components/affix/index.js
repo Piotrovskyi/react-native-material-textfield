@@ -26,10 +26,7 @@ export default class Affix extends PureComponent {
 
     style: Animated.Text.propTypes.style,
 
-    children: PropTypes.oneOfType([
-      PropTypes.arrayOf(PropTypes.node),
-      PropTypes.node,
-    ]),
+    children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
   };
 
   constructor(props) {
@@ -38,7 +35,7 @@ export default class Affix extends PureComponent {
     let { active, focused } = this.props;
 
     this.state = {
-      opacity: new Animated.Value((active || focused)? 1 : 0),
+      opacity: new Animated.Value(active || focused ? 1 : 0),
     };
   }
 
@@ -46,19 +43,17 @@ export default class Affix extends PureComponent {
     let { opacity } = this.state;
     let { active, focused, animationDuration } = this.props;
 
-    if ((focused ^ props.focused) || (active ^ props.active)) {
-      Animated
-        .timing(opacity, {
-          toValue: (props.active || props.focused)? 1 : 0,
-          duration: animationDuration,
-        })
-        .start();
+    if (focused ^ props.focused || active ^ props.active) {
+      Animated.timing(opacity, {
+        toValue: props.active || props.focused ? 1 : 0,
+        duration: animationDuration,
+      }).start();
     }
   }
 
   render() {
     let { opacity } = this.state;
-    let { style, children, type, fontSize, baseColor: color } = this.props;
+    let { style, children, type, fontSize, baseColor: color, focused } = this.props;
 
     let containerStyle = {
       height: fontSize * 1.5,
@@ -82,10 +77,10 @@ export default class Affix extends PureComponent {
         break;
     }
 
-    return (
+    return focused ? (
       <Animated.View style={[styles.container, containerStyle]}>
-        <Animated.Text style={[style, textStyle]}>{children}</Animated.Text>
+        <Animated.Text style={[textStyle, style]}>{children}</Animated.Text>
       </Animated.View>
-    );
+    ) : null;
   }
 }
