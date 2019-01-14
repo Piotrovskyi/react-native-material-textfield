@@ -49,6 +49,7 @@ export default class TextField extends PureComponent {
     disabled: false,
     disabledLineType: 'dotted',
     disabledLineWidth: 1,
+    allowFontScaling: true,
   };
 
   static propTypes = {
@@ -93,6 +94,7 @@ export default class TextField extends PureComponent {
 
     containerStyle: (ViewPropTypes || View.propTypes).style,
     inputContainerStyle: (ViewPropTypes || View.propTypes).style,
+    allowFontScaling: PropTypes.bool,
   };
 
   constructor(props) {
@@ -297,6 +299,7 @@ export default class TextField extends PureComponent {
       fontSize,
       baseColor,
       animationDuration,
+      allowFontScaling: this.props.allowFontScaling,
     };
 
     return (
@@ -467,6 +470,7 @@ export default class TextField extends PureComponent {
       errored,
       restricted,
       style: labelTextStyle,
+      allowFontScaling: props.allowFontScaling,
     };
 
     let counterProps = {
@@ -476,6 +480,11 @@ export default class TextField extends PureComponent {
       limit,
       fontSize: titleFontSize,
       style: titleTextStyle,
+      allowFontScaling: props.allowFontScaling,
+    };
+
+    const helperProps = {
+      allowFontScaling: props.allowFontScaling,
     };
 
     return (
@@ -508,13 +517,17 @@ export default class TextField extends PureComponent {
         </Animated.View>
 
         <Animated.View style={helperContainerStyle}>
-          <Helper style={[errorStyle]}>{error}</Helper>
+          <Helper style={[errorStyle]} {...helperProps}>
+            {error}
+          </Helper>
           <View style={styles.flex}>
             {focused ? (
               value && limit ? (
                 <Counter {...counterProps} />
               ) : (
-                <Helper style={[titleStyle, titleTextStyle]}>{title}</Helper>
+                <Helper style={[titleStyle, titleTextStyle]} {...helperProps}>
+                  {title}
+                </Helper>
               )
             ) : null}
           </View>
